@@ -2,6 +2,7 @@
 
 Integrantes del grupo:
 Req. - José Daniel Montero Gutiérrez, 202012732, j.monterog@uniandes.edu.co
+Req. - Wyo Hann Chu Mendez, 202015066, w.chu@uniandes.edu.co
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
