@@ -38,6 +38,20 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
+    catalog = {'pieces': None,
+               'artists': None,
+               'departments': None}
+    catalog['pieces'] = mp.newMap(150000,
+                                  maptype='CHAINING',
+                                  loadfactor=4.0)
+    catalog['artists'] = mp.newMap(16000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0)
+    catalog['departments'] = mp.newMap(20,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0)
+    return catalog
 
 # Funciones para agregar informacion al catalogo
 
@@ -46,5 +60,9 @@ los mismos.
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def comparedepartments(department1, department2):
+    if (department1.lower() in department2['name'].lower()):
+        return 0
+    return -1
 
 # Funciones de ordenamiento
