@@ -39,19 +39,18 @@ def printArtworks_Medium_oldestDate(n,obras):
     Imprime los libros que han sido publicados en un
     año
     """
-    print(obras)
+    
     oldest_artwork = controller.getOldestArtwork(obras)
     newest_arwork = controller.getNewest_Arwork(obras)
     
     cont = 0
     
-
     
-    for x in reversed(range(newest_arwork,oldest_artwork+1)):
+    for x in reversed(range(newest_arwork['Date'],oldest_artwork['Date']+1)):
         for y in obras:
-            if y['Date'] >= x:
+            if lt.getElement(y,4) >= x:
                 cont += 1
-                print(y['Title'])
+                print(lt.getElement(y,2))
             if cont == n:
                 break    
 
@@ -89,12 +88,10 @@ while True:
     elif int(inputs[0]) == 3:
         n = int(input('Digite el numero de obras'))
         medio = input('Digite el el medio a usar')
-        print(cont['artworksMedium'])
+        
         
         obras = controller.getArtworksByMedium(cont, medio)
 
-        
-        
         printArtworks_Medium_oldestDate(n,obras)
 
         pass
