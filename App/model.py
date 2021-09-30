@@ -88,7 +88,7 @@ def newCatalog():
     """
     Este indice crea un map cuya llave es el identificador del libro
     """
-    catalog['artworksMedium'] = mp.newMap(800,
+    catalog['artworksMedium'] = mp.newMap(80,
                                           maptype='PROBING',
                                           loadfactor=0.5)
 
@@ -108,7 +108,7 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog['artworks'], artwork)
     addArtworkMedium(catalog, artwork)    
     
-def addArtworkMedium(catalog, book):
+def addArtworkMedium(catalog, artwork):
     """
     Esta funcion adiciona un libro a la lista de libros que
     fueron publicados en un año especifico.
@@ -117,9 +117,9 @@ def addArtworkMedium(catalog, book):
     """
     try:
         mediums = catalog['artworksMedium']
-        if (book['Medium'] != ''):
-            pubyear = book['Medium']
-            pubyear = int(float(pubyear))
+        if (artwork['Medium'] != ''):
+            pubyear = artwork['Medium']
+            
         else:
             pubyear = ''
         existmedium = mp.contains(mediums, pubyear)
@@ -129,7 +129,7 @@ def addArtworkMedium(catalog, book):
         else:
             medium = newMedium(pubyear)
             mp.put(mediums, pubyear, medium)
-        lt.addLast(medium['artworks'], book)
+        lt.addLast(medium['artworks'], artwork)
     except Exception:
         return None  
     
@@ -174,7 +174,9 @@ def getOldestArtwork(obras):
     oldest_artwork = ""
     oldest_date = 0
     for artwork in obras:
-        print(artwork['Date'])
+        print(type(obras))
+        
+        
         if int(artwork['Date']) > int(oldest_date):
             oldest_artwork =  obras[artwork] 
             oldest_date = obras[artwork]['Date']  
