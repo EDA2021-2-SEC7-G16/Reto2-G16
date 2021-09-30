@@ -23,6 +23,7 @@
 import config as cf
 import model
 import csv
+import model as model
 
 
 """
@@ -34,8 +35,63 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog
 
+def initCatalog():
+    """
+    Llama la funcion de inicializacion del catalogo del modelo.
+    """
+    catalog = model.newCatalog()
+    return catalog
+
 # Funciones para la carga de datos
+
+def loadData(catalog):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    loadArtworks(catalog)
+
+def loadArtworks(catalog):
+    """
+    Carga los libros del archivo.  Por cada libro se indica al
+    modelo que debe adicionarlo al catalogo.
+    """
+    artworksfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
+    for artwork in input_file:
+        model.addArtwork(catalog, artwork)    
+    
 
 # Funciones de ordenamiento
 
+
+    
+
 # Funciones de consulta sobre el catálogo
+
+def artworksSize(catalog):
+    """
+    Numero de obras cargados al catalogo
+    """
+    return model.artworksSize(catalog)
+
+def getArtworksByMedium(catalog, medium):
+    """
+    Retorna los libros de un autor
+    """
+    mediumartworks = model.getArtworksByMedium(catalog, medium)
+    return mediumartworks    
+
+def getOldestArtwork(obras):
+    """
+    Retorna los libros de un autor
+    """
+    oldestArtowrk = model.getOldestArtwork(obras)
+    return oldestArtowrk   
+
+def getNewest_Arwork(obras):
+    """
+    Retorna los libros de un autor
+    """
+    newestArtowrk = model.getNewest_Arwork(obras)
+    return newestArtowrk
