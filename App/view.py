@@ -34,10 +34,37 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+def printArtworks_Medium_oldestDate(n,obras):
+    """
+    Imprime los libros que han sido publicados en un
+    año
+    """
+    print(obras)
+    oldest_artwork = controller.getOldestArtwork(obras)
+    newest_arwork = controller.getNewest_Arwork(obras)
+    
+    cont = 0
+    
+
+    
+    for x in reversed(range(newest_arwork,oldest_artwork+1)):
+        for y in obras:
+            if y['Date'] >= x:
+                cont += 1
+                print(y['Title'])
+            if cont == n:
+                break    
+
+  
+
+
+
+
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Inicializar Catálogo")
+    print("2- Cargar información en el catálogo")
+    print("3- Consultar las n obras más antiguas para un medio específico")
 
 catalog = None
 
@@ -48,9 +75,28 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        print("Inicializando Catálogo ....")
+        cont = controller.initCatalog()
+        
+        
+
 
     elif int(inputs[0]) == 2:
+        controller.loadData(cont)
+        print('Obras cargados: ' + str(controller.artworksSize(cont)))
+        
+        
+    elif int(inputs[0]) == 3:
+        n = int(input('Digite el numero de obras'))
+        medio = input('Digite el el medio a usar')
+        print(cont['artworksMedium'])
+        
+        obras = controller.getArtworksByMedium(cont, medio)
+
+        
+        
+        printArtworks_Medium_oldestDate(n,obras)
+
         pass
 
     else:
