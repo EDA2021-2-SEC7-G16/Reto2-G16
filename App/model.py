@@ -89,12 +89,12 @@ def newCatalog():
     Este indice crea un map cuya llave es el identificador del libro
     """
     catalog['artworksMedium'] = mp.newMap(300,
-                                          maptype='PROBING',
-                                          loadfactor=0.5)
+                                          maptype='CHAINING',
+                                          loadfactor=4.0)
 
     catalog['Nationality'] = mp.newMap(80,
-                                          maptype='PROBING',
-                                          loadfactor=0.5)                                   
+                                          maptype='CHAINING',
+                                          loadfactor=4.0)                                   
 
     return catalog                                      
 
@@ -113,7 +113,7 @@ def addArtwork(catalog, artwork):
     addArtworkMedium(catalog, artwork)   
     addArtworkNationality(catalog, artwork)
 
-def addNationality(catalog, artwork):
+def addNationality(catalog, country):
     """
     Esta funcion adiciona un obra a la lista de obras,
     adicionalmente lo guarda en un Map usando como llave su Id.
@@ -121,7 +121,7 @@ def addNationality(catalog, artwork):
     al la obra.
    
     """
-    lt.addLast(catalog['Nationality'], artwork['Nationality'])
+    lt.addLast(catalog['Nationality'], country)
            
     
 def addArtworkMedium(catalog, artwork):
@@ -157,19 +157,26 @@ def addArtworkNationality(catalog, artwork):
     """
     
     nationalities = catalog['Nationality']
-    if (artwork['Nationality'] != ''):
-            artworknationality = artwork['Nationality']
-            
-    else:
-        artworknationality = ''
+    artworkAuthor = ''
+    artworkNationality = None
 
-    existnationality = mp.contains(nationalities, artworknationality)
-    if existnationality:
-        entry = mp.get(nationalities, artworknationality)
+    if (artwork['ConstituentID'][0] != ''):
+        artworkAuthor = artwork['ConstituentID'][0]
+
+    for author in lt.iterator(catalog['artists']):
+        if author['ConstituentID'] == artworkAuthor:
+            if author['Nationality'] == '':
+                artworkNationality = 'Nationality unknown'
+            else:
+                artworkNationality = author['Nationality']
+
+    existNationality = mp.contains(nationalities, artworkNationality)
+    if existNationality:
+        entry = mp.get(nationalities, artworkNationality)
         nationality = me.getValue(entry)
     else:
-        nationality = newNationality(artworknationality)
-        mp.put(nationalities, artworknationality, artwork)
+        nationality = newNationality(artworkNationality)
+        mp.put(nationalities, artworkNationality, artwork)
     lt.addLast(nationality['artworks'], artwork)
     
     
