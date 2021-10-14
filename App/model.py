@@ -54,7 +54,9 @@ def newCatalog():
     Retorna el catalogo inicializado.
     """
     catalog = {'artworks': None,
-               'artworksMedium': None,}
+               'artworksMedium': None,
+               'Nationality': None,
+               'artists': None}
 
     """
     Esta lista contiene todo los libros encontrados
@@ -63,6 +65,8 @@ def newCatalog():
     por los indices creados a continuacion.
     """
     catalog['artworks'] = lt.newList('SINGLE_LINKED')
+
+    catalog['artists'] = lt.newList('SINGLE_LINKED')
 
     """
     A continuacion se crean indices por diferentes criterios
@@ -78,6 +82,11 @@ def newCatalog():
                                           maptype='PROBING',
                                           loadfactor=0.5)
 
+    catalog['artistId'] = mp.newMap(800,
+                                          maptype='PROBING',
+                                          loadfactor=0.5)
+                                      
+
     catalog['Nationality'] = mp.newMap(80,
                                           maptype='PROBING',
                                           loadfactor=0.5)                                   
@@ -86,6 +95,19 @@ def newCatalog():
 
 
 # Funciones para agregar informacion al catalogo
+
+
+def addArtist(catalog, artist):
+    """
+    Esta funcion adiciona un obra a la lista de obras,
+    adicionalmente lo guarda en un Map usando como llave su Id.
+    Adicionalmente se guarda en el indice de artistas, una referencia
+    al la obra.
+   
+    """
+    lt.addLast(catalog['artists'], artist)
+    addArtistbyId(catalog, artist)
+    
 
 def addArtwork(catalog, artwork):
     """
@@ -98,6 +120,8 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog['artworks'], artwork)
     addArtworkMedium(catalog, artwork)   
     addArtworkNationality(catalog, artwork)
+
+
 
 def addNationality(catalog, artwork):
     """
@@ -143,8 +167,10 @@ def addArtworkNationality(catalog, artwork):
     """
     
     nationalities = catalog['Nationality']
-    if (artwork['Nationality'] != ''):
-            artworknationality = artwork['Nationality']
+    ids = catalog['artistId']
+    print(ids)
+    if (ids[artwork['ConstituentID']]['Nationality'] != ''):
+            artworknationality = ids[artwork['ConstituentID']]
             
     else:
         artworknationality = ''
@@ -157,6 +183,30 @@ def addArtworkNationality(catalog, artwork):
         nationality = newNationality(artworknationality)
         mp.put(nationalities, artworknationality, artwork)
     lt.addLast(nationality['artworks'], artwork)
+
+def addArtistbyId(catalog, artist):
+    """
+    Esta funcion adiciona un libro a la lista de libros que
+    fueron publicados en un año especifico.
+    Los años se guardan en un Map, donde la llave es el año
+    y el valor la lista de libros de ese año.
+    """
+    
+    artistsids = catalog['artistId']
+    if (artist['ConstituentID'] != ''):
+            artistid = artist['ConstituentID']
+            
+    else:
+        artistid = ''
+
+    existid = mp.contains(artistsids, artistid)
+    if existid:
+        entry = mp.get(artistsids, artistid)
+        id = me.getValue(entry)
+    else:
+        id = newId(artistid)
+        mp.put(artistsids, artistid, artist)
+    lt.addLast(id['artists'], artist)    
     
     
     
@@ -177,10 +227,20 @@ def newNationality(nationality):
     Esta funcion crea la estructura de libros asociados
             a un año.
     """
-    entry = {'medium': "", "artworks": None}
+    entry = {'nationality': "", "artworks": None}
     entry['nationality'] = nationality
     entry['artworks'] = lt.newList('SINGLE_LINKED')
     return entry
+
+def newId(id):
+    """
+    Esta funcion crea la estructura de libros asociados
+            a un año.
+    """
+    entry = {'Id': "", "artists": None}
+    entry['id'] = id
+    entry['artists'] = lt.newList('SINGLE_LINKED')
+    return entry    
 # Funciones para creacion de datos
 
 
