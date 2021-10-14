@@ -88,9 +88,13 @@ def newCatalog():
     """
     Este indice crea un map cuya llave es el identificador del libro
     """
-    catalog['artworksMedium'] = mp.newMap(80,
+    catalog['artworksMedium'] = mp.newMap(300,
                                           maptype='PROBING',
                                           loadfactor=0.5)
+
+    catalog['Nationality'] = mp.newMap(80,
+                                          maptype='PROBING',
+                                          loadfactor=0.5)                                   
 
     return catalog                                      
 
@@ -106,7 +110,19 @@ def addArtwork(catalog, artwork):
    
     """
     lt.addLast(catalog['artworks'], artwork)
-    addArtworkMedium(catalog, artwork)    
+    addArtworkMedium(catalog, artwork)   
+    addArtworkNationality(catalog, artwork)
+
+def addNationality(catalog, artwork):
+    """
+    Esta funcion adiciona un obra a la lista de obras,
+    adicionalmente lo guarda en un Map usando como llave su Id.
+    Adicionalmente se guarda en el indice de artistas, una referencia
+    al la obra.
+   
+    """
+    lt.addLast(catalog['Nationality'], artwork['Nationality'])
+           
     
 def addArtworkMedium(catalog, artwork):
     """
@@ -115,23 +131,49 @@ def addArtworkMedium(catalog, artwork):
     Los años se guardan en un Map, donde la llave es el año
     y el valor la lista de libros de ese año.
     """
-    try:
-        mediums = catalog['artworksMedium']
-        if (artwork['Medium'] != ''):
-            pubyear = artwork['Medium']
+  
+    mediums = catalog['artworksMedium']
+    if (artwork['Medium'] != ''):
+        artworkmedium = artwork['Medium']
             
-        else:
-            pubyear = ''
-        existmedium = mp.contains(mediums, pubyear)
-        if existmedium:
-            entry = mp.get(mediums, pubyear)
-            medium = me.getValue(entry)
-        else:
-            medium = newMedium(pubyear)
-            mp.put(mediums, pubyear, medium)
-        lt.addLast(medium['artworks'], artwork)
-    except Exception:
-        return None  
+    else:
+        artworkmedium = ''
+    existmedium = mp.contains(mediums, artworkmedium)
+    if existmedium:
+        entry = mp.get(mediums, artworkmedium)
+        medium = me.getValue(entry)
+    else:
+        medium = newMedium(artworkmedium)
+        mp.put(mediums, artworkmedium, medium)
+    lt.addLast(medium['artworks'], artwork)
+     
+
+def addArtworkNationality(catalog, artwork):
+    """
+    Esta funcion adiciona un libro a la lista de libros que
+    fueron publicados en un año especifico.
+    Los años se guardan en un Map, donde la llave es el año
+    y el valor la lista de libros de ese año.
+    """
+    
+    nationalities = catalog['Nationality']
+    if (artwork['Nationality'] != ''):
+            artworknationality = artwork['Nationality']
+            
+    else:
+        artworknationality = ''
+
+    existnationality = mp.contains(nationalities, artworknationality)
+    if existnationality:
+        entry = mp.get(nationalities, artworknationality)
+        nationality = me.getValue(entry)
+    else:
+        nationality = newNationality(artworknationality)
+        mp.put(nationalities, artworknationality, artwork)
+    lt.addLast(nationality['artworks'], artwork)
+    
+    
+    
     
 
 def newMedium(pubyear):
@@ -144,6 +186,15 @@ def newMedium(pubyear):
     entry['artworks'] = lt.newList('SINGLE_LINKED')
     return entry
 
+def newNationality(nationality):
+    """
+    Esta funcion crea la estructura de libros asociados
+            a un año.
+    """
+    entry = {'medium': "", "artworks": None}
+    entry['nationality'] = nationality
+    entry['artworks'] = lt.newList('SINGLE_LINKED')
+    return entry
 # Funciones para creacion de datos
 
 
@@ -155,6 +206,10 @@ def artworksSize(catalog):
     Numero de autores en el catalogo
     """
     return mp.size(catalog['artworks'])
+
+def artworksizebynationality(catalog, nationality):   
+
+    return mp.size(catalog['Nationality'][nationality])
 
 
 def getArtworksByMedium(catalog, mediumname):

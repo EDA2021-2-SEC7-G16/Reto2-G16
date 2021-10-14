@@ -59,7 +59,8 @@ def loadArtworks(catalog):
     artworksfile = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for artwork in input_file:
-        model.addArtwork(catalog, artwork)    
+        model.addArtwork(catalog, artwork) 
+
     
 
 # Funciones de ordenamiento
@@ -95,3 +96,10 @@ def getNewest_Arwork(obras):
     """
     newestArtowrk = model.getNewest_Arwork(obras)
     return newestArtowrk
+
+def artworksizebynationality(catalog, nationality):  
+    
+    sizebynationality = model.artworksizebynationality(catalog, nationality)
+    return sizebynationality
+
+       
