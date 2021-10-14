@@ -77,7 +77,7 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Inicializando Catálogo ....")
+        print("Inicializando Catálogo .....")
         cont = controller.initCatalog()
         
     elif int(inputs[0]) == 2:
