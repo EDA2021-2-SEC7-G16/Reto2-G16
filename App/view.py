@@ -54,8 +54,8 @@ def printArtworks_Medium_oldestDate(n,obras):
   
 def printArtworksSizebyNationality(nationality):
     
-    n = controller.artworksizebynationality(catalog,nationality)
-    print('')
+    n = controller.artworksizebynationality(cont,nationality)
+    print(n)
     pass
 
 

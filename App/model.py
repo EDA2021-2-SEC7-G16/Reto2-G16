@@ -68,7 +68,9 @@ def newCatalog():
     Retorna el catalogo inicializado.
     """
     catalog = {'artworks': None,
-               'artworksMedium': None,}
+               'artists': None, 
+               'artworksMedium': None,
+               'Nationality': None}
 
     """
     Esta lista contiene todo los libros encontrados
@@ -77,6 +79,8 @@ def newCatalog():
     por los indices creados a continuacion.
     """
     catalog['artworks'] = lt.newList('SINGLE_LINKED')
+
+    catalog['artists'] = lt.newList('SINGLE_LINKED')
 
     """
     A continuacion se crean indices por diferentes criterios
@@ -112,6 +116,17 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog['artworks'], artwork)
     addArtworkMedium(catalog, artwork)   
     addArtworkNationality(catalog, artwork)
+
+def addArtist(catalog, artist):
+    """
+    Esta funcion adiciona un obra a la lista de obras,
+    adicionalmente lo guarda en un Map usando como llave su Id.
+    Adicionalmente se guarda en el indice de artistas, una referencia
+    al la obra.
+   
+    """
+    lt.addLast(catalog['artists'], artist)
+    
 
 def addNationality(catalog, country):
     """
@@ -176,7 +191,7 @@ def addArtworkNationality(catalog, artwork):
         nationality = me.getValue(entry)
     else:
         nationality = newNationality(artworkNationality)
-        mp.put(nationalities, artworkNationality, artwork)
+        mp.put(nationalities, artworkNationality, nationality)
     lt.addLast(nationality['artworks'], artwork)
     
     
@@ -188,7 +203,7 @@ def newMedium(pubyear):
     Esta funcion crea la estructura de libros asociados
             a un año.
     """
-    entry = {'medium': "", "artworks": None}
+    entry = {'medium': "", 'artworks': None}
     entry['medium'] = pubyear
     entry['artworks'] = lt.newList('SINGLE_LINKED')
     return entry
@@ -198,7 +213,7 @@ def newNationality(nationality):
     Esta funcion crea la estructura de libros asociados
             a un año.
     """
-    entry = {'medium': "", "artworks": None}
+    entry = {'nationality': "", "artworks": None}
     entry['nationality'] = nationality
     entry['artworks'] = lt.newList('SINGLE_LINKED')
     return entry
