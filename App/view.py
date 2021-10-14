@@ -55,7 +55,11 @@ def printArtworks_Medium_oldestDate(n,obras):
                 break    
 
   
-
+def printArtworksSizebyNationality(nationality):
+    
+    n = controller.artworksizebynationality(catalog,nationality)
+    print('')
+    pass
 
 
 
@@ -64,6 +68,8 @@ def printMenu():
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
     print("3- Consultar las n obras más antiguas para un medio específico")
+    print("4- Consultar las n obras por nacionalidad")
+
 
 catalog = None
 
@@ -92,7 +98,18 @@ while True:
         
         obras = controller.getArtworksByMedium(cont, medio)
 
+        for x in obras['first']['next']:
+            print(x)
+
         printArtworks_Medium_oldestDate(n,obras)
+
+        pass
+
+    elif int(inputs[0]) == 4:
+        nationality = input('Digite la nacionalidad a contar')
+        
+
+        printArtworksSizebyNationality(nationality)
 
         pass
 
