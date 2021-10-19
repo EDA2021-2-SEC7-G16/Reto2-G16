@@ -40,21 +40,6 @@ los mismos.
 
 # Construccion de modelos
 def newCatalog():
-    catalog = {'pieces': None,
-               'artists': None,
-               'departments': None}
-    catalog['pieces'] = mp.newMap(150000,
-                                  maptype='CHAINING',
-                                  loadfactor=4.0)
-    catalog['artists'] = mp.newMap(16000,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0)
-    catalog['departments'] = mp.newMap(20,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0)
-    return catalog
-
-def newCatalog():
     """ Inicializa el catálogo de libros
 
     Crea una lista vacia para guardar todos los libros
@@ -220,7 +205,7 @@ def newNationality(nationality):
     return entry
 
 def addAcquireDate(aDList, date, piece):
-    posAcquireDate = lt.isPresent(aDList, str(date))
+    posAcquireDate = lt.isPresent(aDList, date)
     if posAcquireDate > 0:
         acquireDate = lt.getElement(aDList, posAcquireDate)
     else:
@@ -294,7 +279,7 @@ def getNewest_Arwork(obras):
 def listByAcquireDate(catalog, startDate, endDate):
     # Creación de las listas a retornar
     artworkList = lt.newList('ARRAY_LIST')
-    byDatePurchase = lt.newList('ARRAY_LIST')
+    byDatePurchase = lt.newList('ARRAY_LIST', cmpfunction=compareAD)
 
     for artwork in lt.iterator(catalog['artworks']):
         # Compara si la obra está dentro del rango de fechas
@@ -304,7 +289,7 @@ def listByAcquireDate(catalog, startDate, endDate):
                     # Si la obra está dentro del rango, la anexa a la lista de obras dentro del rango
                     lt.addLast(artworkList, artwork)
                     # Anexa la obra a una lista con todas las obras adquiridas en una fecha
-                    addAcquireDate(byDatePurchase, artwork['AcquireDate'], artwork)
+                    addAcquireDate(byDatePurchase, artwork['DateAcquired'], artwork)
 
     totalAmmount = lt.size(artworkList)
     return totalAmmount, artworkList, byDatePurchase
@@ -312,6 +297,11 @@ def listByAcquireDate(catalog, startDate, endDate):
 # Funciones utilizadas para comparar elementos dentro de una lista
 def comparedepartments(department1, department2):
     if (department1.lower() in department2['name'].lower()):
+        return 0
+    return -1
+
+def compareAD(aD1, aD2):
+    if (aD1.lower() in aD2['date'].lower()):
         return 0
     return -1
 

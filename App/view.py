@@ -36,30 +36,37 @@ operación solicitada
 
 def printArtworkData(artwork):
     print('Título de la obra: ' + artwork['Title'])
-    print('Nombre(s) de autor(es): ' + printAuthorNames(artwork))
+    print('Nombre(s) de autor(es): ')
+    printAuthorNames(artwork)
     print('Año de creación: ' + artwork['Date'])
     print('Técnica usada: ' + artwork['Medium'])
     print('Dimensiones de la obra: ' + artwork['Dimensions'] + '\n')
 
 def printAuthorNames(artwork):
-    for artist in lt.iterator(catalog['artists']):
-        for cID in artwork['ConstituentID']:
-            if cID == artist['ConstituentID']:
-                print(artist['DisplayName'])
+    for artist in lt.iterator(cont['artists']):
+        if artist['ConstituentID'] in artwork['ConstituentID']:
+            print(artist['DisplayName'])
+        # for cID in artwork['ConstituentID']:
+        #     print(cID, artwork['ConstituentID'])
+        #     if cID == artist['ConstituentID']:
+        #         print(artist['DisplayName'])
 
 def fThreePiecesRq2(list):
+    print('\n Primeras 3 obras del rango: \n')
     printArtworkData(list['elements'][1])
     printArtworkData(list['elements'][2])
     printArtworkData(list['elements'][3])
 
 def lThreePiecesRq2(list, size):
+    print('Últimas 3 obras del rango: \n')
     printArtworkData(list['elements'][size - 3])
     printArtworkData(list['elements'][size - 2])
     printArtworkData(list['elements'][size - 1])
 
 def printAmmountByDA(dAList):
+    print('Obras adquiridas por fecha de compra: \n')
     for dateDict in lt.iterator(dAList):
-        print('En la fecha de ' + dateDict['date'] + ', se adquirieron ' + str(lt.size(dateDict['pieces'])) + 'obras.')
+        print('En la fecha de ' + dateDict['date'] + ', se adquirió ' + str(lt.size(dateDict['pieces'])) + ' obra(s).')
 
 def printArtworks_Medium_oldestDate(n,obras):
     """
@@ -97,7 +104,7 @@ def printMenu():
     print("6- Listar cronológicamente las adquisiciones")
 
 
-catalog = None
+cont = None
 
 """
 Menu principal
@@ -138,13 +145,12 @@ while True:
     elif int(inputs[0]) == 6:
         startDate = input('Escriba la fecha inicial del rango en el siguiente formato (AAAA-MM-DD): ')
         endDate = input('Escriba la fecha final del rango en el siguiente formato (AAAA-MM-DD): ')
-        answer = controller.listByAcquireDate(catalog, startDate, endDate)
+        answer = controller.listByAcquireDate(cont, startDate, endDate)
         
-        
-        print('Total de obras en el rango: ' + answer[0])
-        print('Obras adquiridas por fecha de compra: \n' + printAmmountByDA(answer[2]))
-        print('Primeras 3 obras del rango: \n' + fThreePiecesRq2(answer[1], answer[0]))
-        print('Últimas 3 obras del rango: \n' + lThreePiecesRq2(answer[1], answer[0]))
+        print('\n Total de obras en el rango: ' + str(answer[0]))
+        printAmmountByDA(answer[2])
+        fThreePiecesRq2(answer[1])
+        lThreePiecesRq2(answer[1], answer[0])
 
     else:
         sys.exit(0)
