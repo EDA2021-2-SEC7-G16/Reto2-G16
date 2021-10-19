@@ -34,6 +34,33 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+def printArtworkData(artwork):
+    print('Título de la obra: ' + artwork['Title'])
+    print('Nombre(s) de autor(es): ' + printAuthorNames(artwork))
+    print('Año de creación: ' + artwork['Date'])
+    print('Técnica usada: ' + artwork['Medium'])
+    print('Dimensiones de la obra: ' + artwork['Dimensions'] + '\n')
+
+def printAuthorNames(artwork):
+    for artist in lt.iterator(catalog['artists']):
+        for cID in artwork['ConstituentID']:
+            if cID == artist['ConstituentID']:
+                print(artist['DisplayName'])
+
+def fThreePiecesRq2(list):
+    printArtworkData(list['elements'][1])
+    printArtworkData(list['elements'][2])
+    printArtworkData(list['elements'][3])
+
+def lThreePiecesRq2(list, size):
+    printArtworkData(list['elements'][size - 3])
+    printArtworkData(list['elements'][size - 2])
+    printArtworkData(list['elements'][size - 1])
+
+def printAmmountByDA(dAList):
+    for dateDict in lt.iterator(dAList):
+        print('En la fecha de ' + dateDict['date'] + ', se adquirieron ' + str(lt.size(dateDict['pieces'])) + 'obras.')
+
 def printArtworks_Medium_oldestDate(n,obras):
     """
     Imprime los libros que han sido publicados en un
@@ -66,6 +93,8 @@ def printMenu():
     print("2- Cargar información en el catálogo")
     print("3- Consultar las n obras más antiguas para un medio específico")
     print("4- Consultar las n obras por nacionalidad")
+
+    print("6- Listar cronológicamente las adquisiciones")
 
 
 catalog = None
@@ -105,6 +134,17 @@ while True:
         printArtworksSizebyNationality(nationality)
 
         pass
+
+    elif int(inputs[0]) == 6:
+        startDate = input('Escriba la fecha inicial del rango en el siguiente formato (AAAA-MM-DD): ')
+        endDate = input('Escriba la fecha final del rango en el siguiente formato (AAAA-MM-DD): ')
+        answer = controller.listByAcquireDate(catalog, startDate, endDate)
+        
+        
+        print('Total de obras en el rango: ' + answer[0])
+        print('Obras adquiridas por fecha de compra: \n' + printAmmountByDA(answer[2]))
+        print('Primeras 3 obras del rango: \n' + fThreePiecesRq2(answer[1], answer[0]))
+        print('Últimas 3 obras del rango: \n' + lThreePiecesRq2(answer[1], answer[0]))
 
     else:
         sys.exit(0)

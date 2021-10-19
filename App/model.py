@@ -136,6 +136,7 @@ def addNationality(catalog, country):
     al la obra.
    
     """
+    sa.sort
     lt.addLast(catalog['Nationality'], country)
            
     
@@ -217,9 +218,23 @@ def newNationality(nationality):
     entry['nationality'] = nationality
     entry['artworks'] = lt.newList('SINGLE_LINKED')
     return entry
+
+def addAcquireDate(aDList, date, piece):
+    posAcquireDate = lt.isPresent(aDList, str(date))
+    if posAcquireDate > 0:
+        acquireDate = lt.getElement(aDList, posAcquireDate)
+    else:
+        acquireDate = newAcquireDate(date)
+        lt.addLast(aDList, acquireDate)
+    lt.addLast(acquireDate['pieces'], piece['Title'])
+
 # Funciones para creacion de datos
 
-
+def newAcquireDate(date):
+    acquireDate = {'date': "", 'pieces': None}
+    acquireDate['date'] = str(date)
+    acquireDate['pieces'] = lt.newList('ARRAY_LIST')
+    return acquireDate
 
 # Funciones de consulta
 
@@ -276,6 +291,23 @@ def getNewest_Arwork(obras):
 
     return newest_Arwork
 
+def listByAcquireDate(catalog, startDate, endDate):
+    # Creación de las listas a retornar
+    artworkList = lt.newList('ARRAY_LIST')
+    byDatePurchase = lt.newList('ARRAY_LIST')
+
+    for artwork in lt.iterator(catalog['artworks']):
+        # Compara si la obra está dentro del rango de fechas
+        if (artwork['DateAcquired'][0:3] >= startDate[0:3]) and (artwork['DateAcquired'][0:3] <= endDate[0:3]):
+            if (artwork['DateAcquired'][5:6] >= startDate[5:6]) and (artwork['DateAcquired'][5:6] <= endDate[5:6]):
+                if (artwork['DateAcquired'][8:9] >= startDate[8:9]) and (artwork['DateAcquired'][8:9] <= endDate[8:9]):
+                    # Si la obra está dentro del rango, la anexa a la lista de obras dentro del rango
+                    lt.addLast(artworkList, artwork)
+                    # Anexa la obra a una lista con todas las obras adquiridas en una fecha
+                    addAcquireDate(byDatePurchase, artwork['AcquireDate'], artwork)
+
+    totalAmmount = lt.size(artworkList)
+    return totalAmmount, artworkList, byDatePurchase
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def comparedepartments(department1, department2):
@@ -311,10 +343,28 @@ def compareMediumNames(name, medium):
     elif (name > medium):
         return 1
     else:
-        return -1        
+        return -1
 
+def compareAcquireDates(artwork1, artwork2):
+    if artwork1['DateAcquired'][0:3] == artwork2['DateAcquired'][0:3]:
+        if artwork1['DateAcquired'][5:6] == artwork2['DateAcquired'][5:6]:
+            if artwork1['DateAcquired'][8:9] == artwork2['DateAcquired'][8:9]:
+                return 0
+            elif artwork1['DateAcquired'][8:9] > artwork2['DateAcquired'][8:9]:
+                return 1
+            else:
+                return -1
+        elif artwork1['DateAcquired'][5:6] > artwork2['DateAcquired'][5:6]:
+            return 1
+        else:
+            return -1
+    elif artwork1['DateAcquired'][0:3] > artwork2['DateAcquired'][0:3]:
+        return 1
+    else:
+        return -1
 
 # Funciones de ordenamiento
 
-
+def sortByAcquireDate(catalog):
+    sa.sort(catalog['artworks'], compareAcquireDates)
 

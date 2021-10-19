@@ -111,4 +111,9 @@ def artworksizebynationality(catalog, nationality):
     sizebynationality = model.artworksizebynationality(catalog, nationality)
     return sizebynationality
 
+def listByAcquireDate(catalog, startDate, endDate):
+    model.sortByAcquireDate(catalog)
+    answer = model.listByAcquireDate(catalog, startDate, endDate)
+    return answer
+
        
