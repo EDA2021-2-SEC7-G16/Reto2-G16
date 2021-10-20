@@ -31,9 +31,6 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog():
-    catalog = model.newCatalog()
-    return catalog
 
 def initCatalog():
     """
@@ -122,5 +119,9 @@ def artistByDate(catalog, anio_inicial,anio_final):
     artistByDate = model.artistByDate(catalog, anio_inicial,anio_final)
 
     return artistByDate    
+def listByAcquireDate(catalog, startDate, endDate):
+    model.sortByAcquireDate(catalog)
+    answer = model.listByAcquireDate(catalog, startDate, endDate)
+    return answer
 
        
