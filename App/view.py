@@ -26,7 +26,8 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
-
+default_limit = 1000 
+sys.setrecursionlimit(default_limit*100)
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -116,6 +117,48 @@ def printArtworksSizebyNationality(nationality):
     print(n)
     pass
 
+def printArtistByDate(anio_inicial,anio_final):
+    
+    n = controller.artistByDate(cont, anio_inicial,anio_final)
+    
+    size = lt.size(n)
+    
+    print('El total de artistas en este rango es de: ',lt.size(n))
+
+    elementos = (1,2,3,size-2,size-1,size)
+
+    for x in elementos:
+
+        print(x,')')
+
+        if lt.getElement(n,x)['DisplayName'] != '':
+            print('Nombre: ',lt.getElement(n,x)['DisplayName'])
+        else:
+            print('Nombre: Unknown')
+
+        if lt.getElement(n,x)['BeginDate'] != str(0):
+            print('Año de nacimiento: ',lt.getElement(n,x)['BeginDate'])
+        else:
+            print('Año de nacimiento: Unknown')
+
+        if lt.getElement(n,x)['EndDate'] != str(0):
+            print('Año de fallecimiento: ',lt.getElement(n,x)['EndDate'])
+        else:
+            print('Año de fallecimiento: Unknown')  
+
+        if lt.getElement(n,x)['Nationality'] != '':
+            print('Nacionalidad: ',lt.getElement(n,x)['Nationality'])
+        else:
+            print('Nacionalidad: Unknown')
+
+        if lt.getElement(n,x)['Gender'] != '':
+            print('Genero: ',lt.getElement(n,x)['Gender'])
+        else:
+            print('Genero: Unknown')                
+       
+        
+        pass
+
 
 
 def printMenu():
@@ -124,6 +167,7 @@ def printMenu():
     print("2- Cargar información en el catálogo")
     print("3- Consultar las n obras más antiguas para un medio específico")
     print("4- Consultar las n obras por nacionalidad")
+    print('5- Listar cronologicamente los artistas')
 
     print("6- Listar cronológicamente las adquisiciones")
 
@@ -168,6 +212,13 @@ while True:
 
         pass
 
+    elif int(inputs[0]) == 5:
+        anio_inicial = input('Ingrese el año inicial')
+        anio_final = input('Ingrese el año final')
+
+        printArtistByDate(anio_inicial,anio_final)
+
+        pass
     elif int(inputs[0]) == 6:
         startDate = input('Escriba la fecha inicial del rango en el siguiente formato (AAAA-MM-DD): ')
         endDate = input('Escriba la fecha final del rango en el siguiente formato (AAAA-MM-DD): ')
