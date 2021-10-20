@@ -31,6 +31,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from datetime import *
 assert cf
 
 """
@@ -70,7 +71,8 @@ def newCatalog():
     catalog = {'artworks': None,
                'artists': None, 
                'artworksMedium': None,
-               'Nationality': None}
+               'Nationality': None,
+               'BornDate': None}
 
     """
     Esta lista contiene todo los libros encontrados
@@ -98,7 +100,11 @@ def newCatalog():
 
     catalog['Nationality'] = mp.newMap(80,
                                           maptype='CHAINING',
-                                          loadfactor=4.0)                                   
+                                          loadfactor=4.0)
+
+    catalog['BornDate'] = mp.newMap(200,
+                                          maptype='CHAINING',
+                                          loadfactor=4.0)                                                                                   
 
     return catalog                                      
 
@@ -126,6 +132,7 @@ def addArtist(catalog, artist):
    
     """
     lt.addLast(catalog['artists'], artist)
+    addArtistByDate(catalog, artist)
     
 
 def addNationality(catalog, country):
@@ -161,6 +168,30 @@ def addArtworkMedium(catalog, artwork):
         medium = newMedium(artworkmedium)
         mp.put(mediums, artworkmedium, medium)
     lt.addLast(medium['artworks'], artwork)
+
+def addArtistByDate(catalog, artist):
+    """
+    Esta funcion adiciona un libro a la lista de libros que
+    fueron publicados en un año especifico.
+    Los años se guardan en un Map, donde la llave es el año
+    y el valor la lista de libros de ese año.
+    """
+  
+    bornDates = catalog['BornDate']
+    if (artist['BeginDate'] != 0):
+        artistBornDate = artist['BeginDate']
+            
+    else:
+        artistBornDate = ''
+    existBornDate = mp.contains(bornDates, artistBornDate)
+    if existBornDate:
+        entry = mp.get(bornDates, artistBornDate)
+        BornDate = me.getValue(entry)
+    else:
+        BornDate = newBornDate(artistBornDate)
+        mp.put(bornDates, artistBornDate, BornDate)
+    lt.addLast(BornDate['artists'], artist)  
+      
      
 
 def addArtworkNationality(catalog, artwork):
@@ -208,6 +239,16 @@ def newMedium(pubyear):
     entry['artworks'] = lt.newList('SINGLE_LINKED')
     return entry
 
+def newBornDate(date):
+    """
+    Esta funcion crea la estructura de libros asociados
+            a un año.
+    """
+    entry = {'BornDate': "", 'artists': None}
+    entry['BornDate'] = date
+    entry['artists'] = lt.newList('ARRAY_LIST')
+    return entry
+
 def newNationality(nationality):
     """
     Esta funcion crea la estructura de libros asociados
@@ -232,6 +273,38 @@ def artworksSize(catalog):
 def artworksizebynationality(catalog, nationality):   
 
     return mp.size(catalog['Nationality'][nationality])
+
+def artistByDate(catalog, anio_inicial,anio_final):   
+
+    artistas = lt.newList('ARRAY_LIST')
+
+    anios = mp.keySet(catalog['BornDate'])
+
+    anios_ordenados = sortyears(anios)
+
+    
+
+
+    for anio in lt.iterator(anios_ordenados):
+
+        
+        
+        if anio >= anio_inicial and anio <= anio_final:
+
+            artist_list  = mp.get(catalog['BornDate'],anio)['value']['artists']
+
+            
+            
+
+            for artist in lt.iterator(artist_list):
+
+
+                lt.addLast(artistas,artist)
+
+        pass
+        
+
+    return artistas   
 
 
 def getArtworksByMedium(catalog, mediumname):
@@ -311,10 +384,26 @@ def compareMediumNames(name, medium):
     elif (name > medium):
         return 1
     else:
-        return -1        
+        return -1    
+
+
+def compareyears(year_1, year_2):
+
+    
+
+    return int(year_1) < int(year_2)
+                
 
 
 # Funciones de ordenamiento
+
+def sortyears(year_list):
+
+    sorted_years = sa.sort(year_list, compareyears)
+
+    return sorted_years
+
+
 
 
 
