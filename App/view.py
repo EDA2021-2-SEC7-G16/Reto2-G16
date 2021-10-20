@@ -63,6 +63,19 @@ def lThreePiecesRq2(list, size):
     printArtworkData(list['elements'][size - 2])
     printArtworkData(list['elements'][size - 1])
 
+def fThreePiecesRq4(list):
+    print('\nPrimeras 3 obras del país con mayor número de obras: \n')
+    printArtworkData(list['elements'][1])
+    printArtworkData(list['elements'][2])
+    printArtworkData(list['elements'][3])
+
+def lThreePiecesRq4(list):
+    size = lt.size(list)
+    print('Últimas 3 obras del país con mayor número de obras: \n')
+    printArtworkData(list['elements'][size - 3])
+    printArtworkData(list['elements'][size - 2])
+    printArtworkData(list['elements'][size - 1])
+
 def printAmmountByDA(dAList):
     print('Obras adquiridas por fecha de compra: \n')
     for dateDict in lt.iterator(dAList):
@@ -85,7 +98,18 @@ def printArtworks_Medium_oldestDate(n,obras):
             if cont == n:
                 break    
 
-  
+def topTenCountries(catalog):
+    n = 1
+    while n <= 10:
+        nationality = lt.getElement(catalog['nationalitiesList'], n)
+        print('La nacionalidad', nationality['nationality'], 'tiene un total de', str(lt.size(nationality['artworks'])), 'obras.')
+        n += 1
+
+def topCountryArtworks(catalog):
+    nationality = lt.getElement(catalog['nationalitiesList'], 1)
+    fThreePiecesRq4(nationality['artworks'])
+    lThreePiecesRq4(nationality['artworks'])
+
 def printArtworksSizebyNationality(nationality):
     
     n = controller.artworksizebynationality(cont,nationality)
@@ -96,13 +120,14 @@ def printArtworksSizebyNationality(nationality):
 
 def printMenu():
     print("Bienvenido")
-    print("1- Inicializar Catálogo")
+    print("1- Inicializar catálogo")
     print("2- Cargar información en el catálogo")
     print("3- Consultar las n obras más antiguas para un medio específico")
     print("4- Consultar las n obras por nacionalidad")
 
     print("6- Listar cronológicamente las adquisiciones")
 
+    print("8- Clasificar obras por nacionalidad")
 
 cont = None
 
@@ -113,12 +138,13 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Inicializando Catálogo .....")
+        print("Inicializando catálogo...")
         cont = controller.initCatalog()
         
     elif int(inputs[0]) == 2:
         controller.loadData(cont)
-        print('Obras cargados: ' + str(controller.artworksSize(cont)))
+        controller.loadNationalitiesList(cont)
+        print('Obras cargadas: ' + str(controller.artworksSize(cont)))
         
     elif int(inputs[0]) == 3:
         n = int(input('Digite el numero de obras'))
@@ -152,6 +178,10 @@ while True:
         fThreePiecesRq2(answer[1])
         lThreePiecesRq2(answer[1], answer[0])
 
+    elif int(inputs[0]) == 8:
+        topTenCountries(cont)
+        topCountryArtworks(cont)
+        
     else:
         sys.exit(0)
 sys.exit(0)

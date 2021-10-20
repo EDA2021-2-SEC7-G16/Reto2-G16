@@ -48,6 +48,8 @@ def loadData(catalog):
     """
     loadArtworks(catalog)
     loadArtists(catalog)
+    # La función de cargar nacionalidades debe ejecutarse al final, pues requiere que las dos listas anteriores
+    # hayan terminado de cargar para poder ejecutarse correctamente.
 
 def loadArtworks(catalog):
     """
@@ -67,8 +69,10 @@ def loadArtists(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in input_file:
-        model.addArtist(catalog, artist)  
-    
+        model.addArtist(catalog, artist)
+
+def loadNationalitiesList(catalog):
+    model.addNationalities(catalog)
 
 # Funciones de ordenamiento
 
@@ -113,5 +117,3 @@ def listByAcquireDate(catalog, startDate, endDate):
     model.sortByAcquireDate(catalog)
     answer = model.listByAcquireDate(catalog, startDate, endDate)
     return answer
-
-       

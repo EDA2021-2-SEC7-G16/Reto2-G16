@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import firstElement
 import config as cf
 
 from DISClib.ADT import list as lt
@@ -54,6 +55,7 @@ def newCatalog():
     """
     catalog = {'artworks': None,
                'artists': None, 
+               'nationalitiesList': None,
                'artworksMedium': None,
                'Nationality': None}
 
@@ -66,6 +68,9 @@ def newCatalog():
     catalog['artworks'] = lt.newList('SINGLE_LINKED')
 
     catalog['artists'] = lt.newList('SINGLE_LINKED')
+
+    catalog['nationalitiesList'] = lt.newList('ARRAY_LIST',
+                                   cmpfunction=comparedepartments)
 
     """
     A continuacion se crean indices por diferentes criterios
@@ -99,7 +104,7 @@ def addArtwork(catalog, artwork):
    
     """
     lt.addLast(catalog['artworks'], artwork)
-    addArtworkMedium(catalog, artwork)   
+    addArtworkMedium(catalog, artwork)
     addArtworkNationality(catalog, artwork)
 
 def addArtist(catalog, artist):
@@ -111,7 +116,43 @@ def addArtist(catalog, artist):
    
     """
     lt.addLast(catalog['artists'], artist)
+
+def addNationalities(catalog):
+    for artwork in lt.iterator(catalog['artworks']):
+        addNationalityToList(catalog, artwork)
+    sa.sort(catalog['nationalitiesList'], compareSizes)
+
+    # sortBySizes(catalog['nationalitiesList'])
+
+    # nationalitiesSizes = []
+    # for nationality in lt.iterator(catalog['nationalitiesList']):
+    #     nationalitiesSizes.append(lt.size(nationality['artworks']))
+    # nationalitiesSizes.sort(reverse=True)
     
+    # sortedNationalities = lt.newList('ARRAY_LIST', cmpfunction=compareSizes)
+    # for size in nationalitiesSizes:
+    #     for nationality in lt.iterator(catalog['nationalitiesList']):    
+    #         nationPos = lt.isPresent(sortedNationalities, nationality['nationality'])
+    #         if size == lt.size(nationality['artworks']) and nationPos == 0:
+    #             lt.addLast(sortedNationalities, nationality)
+    # catalog['nationalitiesList'] == sortedNationalitiess
+    
+    
+def addNationalityToList(catalog, artwork):
+    nationalitiesList = catalog['nationalitiesList']
+    for artist in lt.iterator(catalog['artists']): 
+        if artist['ConstituentID'] in artwork['ConstituentID']:
+            if artist['Nationality'] == None:
+                nationalityName = 'Nationality unknown'
+            else:
+                nationalityName = artist['Nationality']
+            posNationality = lt.isPresent(nationalitiesList, nationalityName)
+            if posNationality > 0:
+                nationality = lt.getElement(nationalitiesList, posNationality)
+            else:
+                nationality = newNationality(nationalityName)
+                lt.addLast(nationalitiesList, nationality)
+            lt.addLast(nationality['artworks'], artwork)
 
 def addNationality(catalog, country):
     """
@@ -179,10 +220,6 @@ def addArtworkNationality(catalog, artwork):
         nationality = newNationality(artworkNationality)
         mp.put(nationalities, artworkNationality, nationality)
     lt.addLast(nationality['artworks'], artwork)
-    
-    
-    
-    
 
 def newMedium(pubyear):
     """
@@ -201,7 +238,8 @@ def newNationality(nationality):
     """
     entry = {'nationality': "", "artworks": None}
     entry['nationality'] = nationality
-    entry['artworks'] = lt.newList('SINGLE_LINKED')
+    entry['artworks'] = lt.newList('ARRAY_LIST',
+                                   cmpfunction=compareSizes)
     return entry
 
 def addAcquireDate(aDList, date, piece):
@@ -296,7 +334,7 @@ def listByAcquireDate(catalog, startDate, endDate):
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def comparedepartments(department1, department2):
-    if (department1.lower() in department2['name'].lower()):
+    if (department1.lower() in department2['nationality'].lower()):
         return 0
     return -1
 
@@ -316,6 +354,9 @@ def compareArtworkId(id1, id2):
         return 1
     else:
         return -1
+
+def compareSizes(item1, item2):
+    return lt.size(item1['artworks']) > lt.size(item2['artworks'])
 
 def compareArtworkDateMedium(id, tag):
     tagentry = me.getKey(tag)
@@ -358,3 +399,27 @@ def compareAcquireDates(artwork1, artwork2):
 def sortByAcquireDate(catalog):
     sa.sort(catalog['artworks'], compareAcquireDates)
 
+def sortBySizes(listToSort):
+    sortedList = lt.newList('ARRAY_LIST', cmpfunction=compareSizes)
+
+    for nationality in lt.iterator(listToSort):
+        if lt.size(sortedList) == 0:
+            lt.addLast(sortedList, nationality)
+        else:
+            firstEl = lt.firstElement(sortedList)
+            lastEl = lt.lastElement(sortedList)
+            if lt.size(nationality['artworks']) > lt.size(firstEl['artworks']):
+                lt.addFirst(sortedList, nationality)
+            elif lt.size(nationality['artworks']) <= lt.size(lastEl['artworks']):
+                lt.addLast(sortedList, nationality)
+            else:
+                for sNat in lt.iterator(sortedList):
+                    elmtPos = lt.isPresent(sortedList, sNat)
+                    nextElmt = lt.getElement(sortedList, (elmtPos + 1))
+                    if lt.size(sNat['artworks']) == lt.size(nationality['artworks']):
+                        lt.insertElement(sortedList, nationality, (elmtPos + 1))
+                    elif (lt.size(sNat['artworks']) > lt.size(nationality['artworks'])) and (lt.size(nextElmt['artworks']) < lt.size(nationality['artworks'])):
+                        lt.insertElement(sortedList, nationality, (elmtPos + 1))
+
+    for nat in lt.iterator(sortedList):
+        print(lt.size(nat['artworks']))
