@@ -128,39 +128,73 @@ def printArtistByDate(anio_inicial,anio_final):
     
     print('El total de artistas en este rango es de: ',lt.size(n))
 
-    elementos = (1,2,3,size-2,size-1,size)
+    if lt.size(n)>6:
 
-    for x in elementos:
+        elementos = (1,2,3,size-2,size-1,size)
 
-        print(x,')')
+        for x in elementos:
 
-        if lt.getElement(n,x)['DisplayName'] != '':
-            print('Nombre: ',lt.getElement(n,x)['DisplayName'])
-        else:
-            print('Nombre: Unknown')
+            print(x,')')
 
-        if lt.getElement(n,x)['BeginDate'] != str(0):
-            print('Año de nacimiento: ',lt.getElement(n,x)['BeginDate'])
-        else:
-            print('Año de nacimiento: Unknown')
+            if lt.getElement(n,x)['DisplayName'] != '':
+                print('Nombre: ',lt.getElement(n,x)['DisplayName'])
+            else:
+                print('Nombre: Unknown')
 
-        if lt.getElement(n,x)['EndDate'] != str(0):
-            print('Año de fallecimiento: ',lt.getElement(n,x)['EndDate'])
-        else:
-            print('Año de fallecimiento: Unknown')  
+            if lt.getElement(n,x)['BeginDate'] != str(0):
+                print('Año de nacimiento: ',lt.getElement(n,x)['BeginDate'])
+            else:
+                rint('Año de nacimiento: Unknown')
 
-        if lt.getElement(n,x)['Nationality'] != '':
-            print('Nacionalidad: ',lt.getElement(n,x)['Nationality'])
-        else:
-            print('Nacionalidad: Unknown')
+            if lt.getElement(n,x)['EndDate'] != str(0):
+                print('Año de fallecimiento: ',lt.getElement(n,x)['EndDate'])
+            else:
+                print('Año de fallecimiento: Unknown')  
 
-        if lt.getElement(n,x)['Gender'] != '':
-            print('Genero: ',lt.getElement(n,x)['Gender'])
-        else:
-            print('Genero: Unknown')                
+            if lt.getElement(n,x)['Nationality'] != '':
+                print('Nacionalidad: ',lt.getElement(n,x)['Nationality'])
+            else:
+                print('Nacionalidad: Unknown')
+
+            if lt.getElement(n,x)['Gender'] != '':
+                print('Genero: ',lt.getElement(n,x)['Gender'])
+            else:
+                print('Genero: Unknown')                
        
+    else:
+
+        for x in range(1,lt.size(n)+1):
+            print(x,')')
+
+            if lt.getElement(n,x)['DisplayName'] != '':
+                print('Nombre: ',lt.getElement(n,x)['DisplayName'])
+            else:
+                print('Nombre: Unknown')
+
+            if lt.getElement(n,x)['BeginDate'] != str(0):
+                print('Año de nacimiento: ',lt.getElement(n,x)['BeginDate'])
+            else:
+                rint('Año de nacimiento: Unknown')
+
+            if lt.getElement(n,x)['EndDate'] != str(0):
+                print('Año de fallecimiento: ',lt.getElement(n,x)['EndDate'])
+            else:
+                print('Año de fallecimiento: Unknown')  
+
+            if lt.getElement(n,x)['Nationality'] != '':
+                print('Nacionalidad: ',lt.getElement(n,x)['Nationality'])
+            else:
+                print('Nacionalidad: Unknown')
+
+            if lt.getElement(n,x)['Gender'] != '':
+                print('Genero: ',lt.getElement(n,x)['Gender'])
+            else:
+                print('Genero: Unknown')        
+
+             
+
+
         
-        pass
 
 def printArtworksbyArtistMedium(artist_name):
     
@@ -261,8 +295,11 @@ while True:
     elif int(inputs[0]) == 5:
         anio_inicial = input('Ingrese el año inicial')
         anio_final = input('Ingrese el año final')
-
+        startTime = time.process_time()
         printArtistByDate(anio_inicial,anio_final)
+        stopTime = time.process_time()
+        elapsedTime = (stopTime - startTime) * 1000
+        print('El tiempo que se demoró en ejecutar fue de ' + str(elapsedTime) + ' ms.')
 
         pass
 
@@ -293,11 +330,15 @@ while True:
         depList = controller.transportDepartment(cont, department)
 
     elif int(inputs[0]) == 7:
+        startTime = time.process_time()
         artist_name = input('Digite el nombre del artista')
+        stopTime = time.process_time()
+        elapsedTime = (stopTime - startTime) * 1000
+        print('El tiempo que se demoró en ejecutar fue de ' + str(elapsedTime) + ' ms.')
         
 
         printArtworksbyArtistMedium(artist_name)
-
+        print('El tiempo que se demoró en ejecutar fue de ' + str(elapsedTime) + ' ms.')
 
 
     else:

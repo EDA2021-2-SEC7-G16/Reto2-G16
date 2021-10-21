@@ -253,10 +253,7 @@ def artworksbyArtistMedium(catalog, artist_name):
         
 
         if artist['DisplayName'] == artist_name:
-            id_artist = artist['ConstituentID']
-            
-
-           
+            id_artist = artist['ConstituentID'] 
 
     for artwork in lt.iterator(catalog['artworks']):
 
@@ -268,16 +265,7 @@ def artworksbyArtistMedium(catalog, artist_name):
 
     total_obras = lt.size(obras)
 
-    
-                  
-                  
-    
-    
     map, mediumslist = newMapArtistByMedium(obras)
-
-    
-    
-
     return map, mediumslist, total_obras
 
     
@@ -391,8 +379,6 @@ def artistByDate(catalog, anio_inicial,anio_final):
     anios_ordenados = sortyears(anios)
 
     
-
-
     for anio in lt.iterator(anios_ordenados):
 
         
