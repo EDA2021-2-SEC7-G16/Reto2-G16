@@ -34,6 +34,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from datetime import *
 assert cf
+import time
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -57,6 +58,7 @@ def newCatalog():
     catalog = {'artworks': None,
                'artists': None, 
                'nationalitiesList': None,
+               'departmentsList': None,
                'artworksMedium': None,
                'Nationality': None,
                'BornDate': None}
@@ -73,6 +75,8 @@ def newCatalog():
 
     catalog['nationalitiesList'] = lt.newList('ARRAY_LIST',
                                    cmpfunction=comparedepartments)
+
+    catalog['departmentsList'] = lt.newList('ARRAY_LIST')
 
     """
     A continuacion se crean indices por diferentes criterios
@@ -468,33 +472,6 @@ def sortyears(year_list):
 
     return sorted_years
 
-
-
-
 def sortByAcquireDate(catalog):
     sa.sort(catalog['artworks'], compareAcquireDates)
 
-def sortBySizes(listToSort):
-    sortedList = lt.newList('ARRAY_LIST', cmpfunction=compareSizes)
-
-    for nationality in lt.iterator(listToSort):
-        if lt.size(sortedList) == 0:
-            lt.addLast(sortedList, nationality)
-        else:
-            firstEl = lt.firstElement(sortedList)
-            lastEl = lt.lastElement(sortedList)
-            if lt.size(nationality['artworks']) > lt.size(firstEl['artworks']):
-                lt.addFirst(sortedList, nationality)
-            elif lt.size(nationality['artworks']) <= lt.size(lastEl['artworks']):
-                lt.addLast(sortedList, nationality)
-            else:
-                for sNat in lt.iterator(sortedList):
-                    elmtPos = lt.isPresent(sortedList, sNat)
-                    nextElmt = lt.getElement(sortedList, (elmtPos + 1))
-                    if lt.size(sNat['artworks']) == lt.size(nationality['artworks']):
-                        lt.insertElement(sortedList, nationality, (elmtPos + 1))
-                    elif (lt.size(sNat['artworks']) > lt.size(nationality['artworks'])) and (lt.size(nextElmt['artworks']) < lt.size(nationality['artworks'])):
-                        lt.insertElement(sortedList, nationality, (elmtPos + 1))
-
-    for nat in lt.iterator(sortedList):
-        print(lt.size(nat['artworks']))

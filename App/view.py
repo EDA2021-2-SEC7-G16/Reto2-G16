@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import time
 
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*100)
@@ -172,6 +173,7 @@ def printMenu():
     print("6- Listar cronológicamente las adquisiciones")
 
     print("8- Clasificar obras por nacionalidad")
+    print("9- Transportar obras de un departamento")
 
 cont = None
 
@@ -222,17 +224,29 @@ while True:
     elif int(inputs[0]) == 6:
         startDate = input('Escriba la fecha inicial del rango en el siguiente formato (AAAA-MM-DD): ')
         endDate = input('Escriba la fecha final del rango en el siguiente formato (AAAA-MM-DD): ')
+        startTime = time.process_time()
         answer = controller.listByAcquireDate(cont, startDate, endDate)
         
         print('\n Total de obras en el rango: ' + str(answer[0]))
         printAmmountByDA(answer[2])
         fThreePiecesRq2(answer[1])
         lThreePiecesRq2(answer[1], answer[0])
+        stopTime = time.process_time()
+        elapsedTime = (stopTime - startTime) * 1000
+        print('El tiempo que se demoró en ejecutar fue de ' + str(elapsedTime) + ' ms.')
 
     elif int(inputs[0]) == 8:
+        startTime = time.process_time()
         topTenCountries(cont)
         topCountryArtworks(cont)
-        
+        stopTime = time.process_time()
+        elapsedTime = (stopTime - startTime) * 1000
+        print('El tiempo que se demoró en ejecutar fue de ' + str(elapsedTime) + ' ms.')
+
+    elif int(inputs[0]) == 9:
+        department = input('Escriba el nombre del departamento del museo: ')
+        depList = controller.transportDepartment(cont, department)
+
     else:
         sys.exit(0)
 sys.exit(0)
