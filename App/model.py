@@ -91,6 +91,9 @@ def newCatalog():
                                           maptype='CHAINING',
                                           loadfactor=4.0)                                                                                   
 
+    catalog['ArtworksByArtist'] = mp.newMap(1500,
+                                          maptype='CHAINING',
+                                          loadfactor=4.0)   
     return catalog                                      
 
 
@@ -212,8 +215,81 @@ def addArtworkNationality(catalog, artwork):
     lt.addLast(nationality['artworks'], artwork)
     
     
+def artworksbyArtistMedium(catalog, artist_name): 
+    
+    obras = lt.newList("ARRAY_LIST")
+    id_artist = ''
+
+    for artist in lt.iterator(catalog['artists']):
+        
+
+        if artist['DisplayName'] == artist_name:
+            id_artist = artist['ConstituentID']
+            
+
+           
+
+    for artwork in lt.iterator(catalog['artworks']):
+
+        
+        
+        if id_artist in artwork['ConstituentID']:
+            
+            lt.addLast(obras, artwork)
+
+    total_obras = lt.size(obras)
+
+    
+                  
+                  
     
     
+    map, mediumslist = newMapArtistByMedium(obras)
+
+    
+    
+
+    return map, mediumslist, total_obras
+
+    
+def newMapArtistByMedium(artworks):   
+
+    artworks_bymediumArtist = mp.newMap(100,
+                                maptype='CHAINING',
+                                loadfactor=4.0) 
+
+    mediums_list = lt.newList("ARRAY_LIST")       
+
+                        
+
+    for artwork in lt.iterator(artworks):
+
+        
+
+        if artwork['Medium'] != '':
+            artworkMedium = artwork['Medium']
+        else:
+            artworkMedium = ''   
+
+        existMedium = mp.contains(artworks_bymediumArtist, artworkMedium)
+
+        if existMedium:
+            entry = mp.get(artworks_bymediumArtist,artworkMedium)
+            medium =  me.getValue(entry)   
+        else:
+            lt.addLast(mediums_list, artworkMedium)
+            medium = newMedium(artworkMedium)
+            mp.put(artworks_bymediumArtist, artworkMedium ,medium)
+        lt.addLast(medium['artworks'], artwork)
+    
+      
+
+    return artworks_bymediumArtist,mediums_list
+
+
+
+
+
 
 def newMedium(pubyear):
     """
@@ -273,6 +349,8 @@ def artworksSize(catalog):
 def artworksizebynationality(catalog, nationality):   
 
     return mp.size(catalog['Nationality'][nationality])
+
+
 
 def artistByDate(catalog, anio_inicial,anio_final):   
 

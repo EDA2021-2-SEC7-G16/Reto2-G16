@@ -109,6 +109,11 @@ def artworksizebynationality(catalog, nationality):
     sizebynationality = model.artworksizebynationality(catalog, nationality)
     return sizebynationality
 
+def artworksbyArtistMedium(catalog, artist_name):  
+    
+    sizebynationality = model.artworksbyArtistMedium(catalog, artist_name)
+    return sizebynationality    
+
 def artistByDate(catalog, anio_inicial,anio_final):  
 
     if len(anio_inicial) != 4 or len(anio_inicial) != 4:
@@ -118,7 +123,9 @@ def artistByDate(catalog, anio_inicial,anio_final):
     
     artistByDate = model.artistByDate(catalog, anio_inicial,anio_final)
 
-    return artistByDate    
+    return artistByDate   
+    
+     
 def listByAcquireDate(catalog, startDate, endDate):
     model.sortByAcquireDate(catalog)
     answer = model.listByAcquireDate(catalog, startDate, endDate)

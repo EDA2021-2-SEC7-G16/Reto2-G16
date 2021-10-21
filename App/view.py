@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 default_limit = 1000 
@@ -135,7 +137,48 @@ def printArtistByDate(anio_inicial,anio_final):
         
         pass
 
+def printArtworksbyArtistMedium(artist_name):
+    
+    map,lista_medios, n_obras = controller.artworksbyArtistMedium(cont,artist_name)
+    print('El total de obras para este artista es de: ',n_obras)
+    print('El total de medios utilizados por este artista es de: ', mp.size(map))
 
+    n_biggest_medium = 0
+    bigget_medium = ''
+    
+
+    for x in lt.iterator(lista_medios):
+        
+        if lt.size(mp.get(map,x)['value']['artworks']) > n_biggest_medium:
+            n_biggest_medium = lt.size(mp.get(map,x)['value']['artworks'])
+            bigget_medium = x
+
+    print('El medio mas utilizado es: ', bigget_medium)        
+
+    listartworks_biggest_medium = mp.get(map,bigget_medium)['value']['artworks']
+
+    if n_biggest_medium > 6:
+        elemntos = (1,2,3, n_biggest_medium-2, n_biggest_medium-1, n_biggest_medium)
+        for y in elemntos:
+            print('obra ', y)
+            print('Titulo: ',lt.getElement(listartworks_biggest_medium,y)['Title'])
+            print('Fecha de la obra: ', lt.getElement(listartworks_biggest_medium,y)['Date'])
+            print('Medio: ',lt.getElement(listartworks_biggest_medium,y)['Medium'])
+            print('Dimensiones: ',lt.getElement(listartworks_biggest_medium,y)['Dimensions'])
+
+    else:
+
+        
+        for y in range(1, n_biggest_medium+1):
+            print('obra ', y)
+            print('Titulo: ',lt.getElement(listartworks_biggest_medium,y)['Title'])
+            print('Fecha de la obra: ', lt.getElement(listartworks_biggest_medium,y)['Date'])
+            print('Medio: ',lt.getElement(listartworks_biggest_medium,y)['Medium'])
+            print('Dimensiones: ',lt.getElement(listartworks_biggest_medium,y)['Dimensions'])
+
+
+
+    
 
 def printMenu():
     print("Bienvenido")
@@ -146,6 +189,7 @@ def printMenu():
     print('5- Listar cronologicamente los artistas')
 
     print("6- Listar cronológicamente las adquisiciones")
+    print("7- Clasificar las obras de un artista por tecnica")
 
 
 cont = None
@@ -184,7 +228,7 @@ while True:
 
         printArtworksSizebyNationality(nationality)
 
-        pass
+        
 
     elif int(inputs[0]) == 5:
         anio_inicial = input('Ingrese el año inicial')
@@ -193,6 +237,7 @@ while True:
         printArtistByDate(anio_inicial,anio_final)
 
         pass
+
     elif int(inputs[0]) == 6:
         startDate = input('Escriba la fecha inicial del rango en el siguiente formato (AAAA-MM-DD): ')
         endDate = input('Escriba la fecha final del rango en el siguiente formato (AAAA-MM-DD): ')
@@ -202,6 +247,14 @@ while True:
         printAmmountByDA(answer[2])
         fThreePiecesRq2(answer[1])
         lThreePiecesRq2(answer[1], answer[0])
+
+    elif int(inputs[0]) == 7:
+        artist_name = input('Digite el nombre del artista')
+        
+
+        printArtworksbyArtistMedium(artist_name)
+
+
 
     else:
         sys.exit(0)
